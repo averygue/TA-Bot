@@ -136,6 +136,7 @@ exports.onNext = (message, args) => {
  * There is currently no Bot process for letting the user know it was an accident
  */
 
+<<<<<<< HEAD
 exports.onUndo = (message) => {
   if (TA_CHANNEL === message.channel.id) {
     if (dequeued.length === 0) {
@@ -154,6 +155,39 @@ exports.onQueue = (message) => {
     if (queue.length === 0) {
       message.channel.send('```nimrod\nThe queue is currently empty```');
       return;
+=======
+exports.onUndo = (message, args) => {
+    if (TA_CHANNEL == message.channel.id) {
+        if (dequeued.length == 0) {
+            message.react(NAK)
+            message.reply("```nimrod\nThere is currently nothing in the dequeue cache.```")
+            return
+        }
+
+        queue.splice(0, 1, dequeued.pop())
+        message.react(ACK)
+        message.reply("```nimrod\nDone! Don't screw up next time!```")
+    }
+}
+
+exports.onQueue = (message, args) => {
+    if (TA_CHANNEL == message.channel.id) {
+        if (queue.length == 0) {
+            message.channel.send("```nimrod\nThe queue is currently empty```")
+            return
+        }
+
+        var body = ""
+        for (var i = 0; i < queue.length; i++) {
+            var username = queue[i].member.username
+            var waitTime = moment(queue[i].timestamp).fromNow()
+            var desc = queue[i].desc
+
+            body += `${i}) ${username} "${desc}"\t\t [${waitTime}]\n`
+        }
+
+        message.channel.send("```nimrod\n" + body + "```")
+>>>>>>> af5d168a59c792d053d93b9532ea875923bc5c90
     }
     const body = [];
     for (let i = 0; i < queue.length; i += 1) {
@@ -167,6 +201,7 @@ exports.onQueue = (message) => {
   }
 };
 
+<<<<<<< HEAD
 // This potentially could be where the TA-leave functionality goes
 exports.onLeave = (message) => {
   if (OFFICE_HOURS === message.channel.id) {
@@ -174,6 +209,19 @@ exports.onLeave = (message) => {
       message.react(NAK);
       message.delete({ timeout: 10 * 1000 });
       return;
+=======
+exports.onRemove = (message, args) => {
+    if (TA_CHANNEL != message.channel.id) return
+    if(tas[message.author.id].online_status == 0) {
+        message.reply("You are offline. Can't ready up.")
+        return
+    }
+
+    if (args.length == 0 || isNaN(args[0])) {
+        message.reply("Please provide an index to remove.")
+        message.reply("`!remove <index>`")
+        return
+>>>>>>> af5d168a59c792d053d93b9532ea875923bc5c90
     }
 
     queue.splice(index(message.author), 1);
@@ -208,6 +256,7 @@ exports.onRemove = (message, args) => {
 
 exports.onReady = (message, args) => {
   // If you are not online, you can't ready up.
+<<<<<<< HEAD
   if (TA_CHANNEL !== message.channel.id) return;
   if (!isOnline(message.author)) {
     message.reply("You are offline. Can't ready up.");
@@ -244,6 +293,36 @@ exports.onOnline = (message) => {
       message.reply('You are already online.');
       return;
     }
+=======
+   if (TA_CHANNEL != message.channel.id) return
+    if(tas[message.author.id].online_status == 0) {
+        message.reply("You are offline. Can't ready up.")
+        return
+    }
+
+    if (queue.length == 0) {
+        message.channel.send("```nimrod\nThe queue is currently empty```")
+        return
+    }
+
+    var index = 0
+    if (args.length > 0 && !isNaN(args[0]))
+        index = parseInt(args[0])
+    
+    if (index >= queue.length) {
+        message.react(NAK)
+        message.reply("Invalid index.")
+        return
+    }
+    
+    ready(message, index)
+}
+
+exports.onOof = (message, args) => {
+     x++
+     message.reply("There has been " + x + " 'persistent' questions to date.")
+}
+>>>>>>> af5d168a59c792d053d93b9532ea875923bc5c90
 
     onlineTas[message.author.id] = {}; // Marks the author as 'online'
     message.guild.channels.cache.get(OFFICE_HOURS).send(`${message.author} is now online. Ready to answer questions!:wave:`);
