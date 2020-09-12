@@ -25,6 +25,7 @@ These instructions are for installing CyberTA to a Heroku application. You will 
 
 1. Fork this repository to your GitHub account, or an account you have access to.
 ##### Heroku Instance
+* With Github Student Developer Pack, you will have access to more hour usage credits *
 1. Create a new app, call it whatever you'd like (only you will see this).
 2. For deployment method, choose Github, search for your fork and connect.
 3. Once it has connected successfully a new section called "Manual deploy" will appear, deploy master to pull the code from GitHub.
